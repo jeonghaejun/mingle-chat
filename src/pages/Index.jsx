@@ -1,15 +1,33 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from 'react';
+import io from 'socket.io-client';
 import { Box, Button, Container, Flex, HStack, Input, Text, VStack, Avatar } from "@chakra-ui/react";
 import { FaPaperPlane } from "react-icons/fa";
 
+const socket = io('http://10.1.20.159:5000'); // Replace with your server URL
+
 const Index = () => {
-  const [messages, setMessages] = useState([]);
   const [username, setUsername] = useState("");
+  const [messages, setMessages] = useState([]);
   const [inputValue, setInputValue] = useState("");
+
+  useEffect(() => {
+    socket.on('chat message', (msg) => {
+      if(msg.sender == username){
+        setMessages((prevMessages) => [...prevMessages, { text: msg.text, sender: "You" }]);
+      }else{
+        setMessages((prevMessages) => [...prevMessages, { text: msg.text, sender: msg.sender }]);
+      }      
+    });
+  
+    return () => {
+      socket.off('chat message');
+    };
+  }, [username]);
 
   const handleSendMessage = () => {
     if (inputValue.trim() !== "" && username.trim() !== "") {
-      setMessages([...messages, { text: inputValue, sender: username === "You" ? "You" : username }]);
+      const message = { text: inputValue, sender: username };
+      socket.emit('chat message', message);
       setInputValue("");
     }
   };

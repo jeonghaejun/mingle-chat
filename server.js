@@ -1,24 +1,24 @@
-const express = require("express");
-const http = require("http");
-const { Server } = require("socket.io");
+import http from 'http';
+import { Server } from 'socket.io';
 
-const app = express();
-const server = http.createServer(app);
-const io = new Server(server);
+const server = http.createServer();
 
-io.on("connection", (socket) => {
-  console.log("a user connected");
+const io = new Server(server, {
+  cors: {
+    origin: "*", // Replace with your client URL
+    methods: ["GET", "POST"]
+  }
+});
 
-  socket.on("chat message", (msg) => {
-    io.emit("chat message", msg);
-  });
-
-  socket.on("disconnect", () => {
-    console.log("user disconnected");
+io.on('connection', (socket) => {
+  console.log('Client connected...');
+  socket.on('chat message', (message) => {
+    console.log('Message received:', message);
+    io.emit('chat message', message);
   });
 });
 
-const PORT = process.env.PORT || 3000;
-server.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+const port = 5000; // Replace with your server port
+server.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
 });
