@@ -34,8 +34,10 @@ const Index = () => {
 
   return (
     <Container centerContent maxW="container.md" height="100vh" display="flex" flexDirection="column" justifyContent="center" alignItems="center">
-      <Input placeholder="Enter your username" value={username} onChange={(e) => setUsername(e.target.value)} />
       <VStack spacing={4} width="100%">
+        <HStack width="100%">
+          <Input placeholder="Enter your username..." value={username} onChange={(e) => setUsername(e.target.value)} />
+        </HStack>
         <Box bg="gray.100" w="100%" p={4} borderRadius="md" boxShadow="md" overflowY="auto" height="60vh">
           {messages.map((message, index) => (
             <Flex key={index} justify={message.sender === "You" ? "flex-end" : "flex-start"} mb={2}>
