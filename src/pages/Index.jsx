@@ -9,7 +9,7 @@ const Index = () => {
 
   const handleSendMessage = () => {
     if (inputValue.trim() !== "" && username.trim() !== "") {
-      setMessages([...messages, { text: inputValue, sender: username }]);
+      setMessages([...messages, { text: inputValue, sender: username === "You" ? "You" : username }]);
       setInputValue("");
     }
   };
